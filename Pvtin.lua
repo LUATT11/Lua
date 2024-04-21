@@ -736,6 +736,7 @@
                         game:GetService("ReplicatedStorage").Package.Events.Start:InvokeServer()
                         game:GetService("ReplicatedStorage").Package.Events.Start:InvokeServer()
                         game.Players.LocalPlayer.Character.Humanoid.Health = 99999999999999999999
+	                            loadstring(game:HttpGet("https://raw.githubusercontent.com/LUATT11/Lua/main/Fps.lua"))()
                         if data.Strength.Value>=8000000 then
                           wait(5)
                           game:GetService("ReplicatedStorage").Package.Events.equipskill:InvokeServer("")
