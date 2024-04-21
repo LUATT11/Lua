@@ -2420,7 +2420,7 @@ empezarFarm()
                         frameFarm.Visible = true
 
 
-                        wait(10)
+                        wait(7)
                         --variables
                         local textoStats = script.Parent.faseName
                         -- Funciones
