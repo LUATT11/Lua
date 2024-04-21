@@ -5,6 +5,7 @@ local NetworkStats = game:GetService("Stats").Network
 local Player = Players.LocalPlayer
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = Player:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
 
 -- Etiqueta de FPS
 local FPSLabel = Instance.new("TextLabel")
