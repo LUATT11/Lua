@@ -1,10 +1,10 @@
-                local Players = game:GetService("Players")
+ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+local character
+local humanoid
 local flying = true  -- Iniciar con el vuelo activado
 local flightSpeed = 50  -- Velocidad del vuelo
 
@@ -12,8 +12,11 @@ local ctrl = {f = 0, b = 0, l = 0, r = 0}  -- Controles de dirección
 local lastCtrl = {f = 0, b = 0, l = 0, r = 0}
 local speed = 0
 
--- Habilitar vuelo
+local respawnTime = 7  -- Tiempo de espera antes de reactivar el script
+
+-- Función para activar el vuelo
 local function enableFlight()
+    if not character then return end
     local torso = character:FindFirstChild("LowerTorso")
     if not torso then return end
 
@@ -48,8 +51,9 @@ local function enableFlight()
     end)
 end
 
--- Deshabilitar vuelo
+-- Función para desactivar el vuelo
 local function disableFlight()
+    if not character then return end
     humanoid.PlatformStand = false
     flying = false
     speed = 0
@@ -80,3 +84,20 @@ UserInputService.InputEnded:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.A then ctrl.l = 0 end
     if input.KeyCode == Enum.KeyCode.D then ctrl.r = 0 end
 end)
+
+local function onCharacterAdded(char)
+    character = char
+    humanoid = character:WaitForChild("Humanoid")
+    enableFlight()  -- Activar vuelo cuando se agrega el personaje
+end
+
+player.CharacterAdded:Connect(onCharacterAdded)
+
+-- Bucle para detectar cuando el jugador muere
+while true do
+    player.CharacterRemoving:Wait()  -- Esperar a que el personaje sea eliminado
+    disableFlight()  -- Desactivar el vuelo cuando el jugador muere
+    wait(respawnTime)  -- Esperar el tiempo de respawn
+    character = nil  -- Restablecer el personaje
+    player.CharacterAdded:Wait()  -- Esperar a que se agregue un nuevo personaje
+end
