@@ -79,5 +79,5 @@ UserInputService.InputEnded:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.S then ctrl.b = 0 end
     if input.KeyCode == Enum.KeyCode.A then ctrl.l = 0 end
     if input.KeyCode == Enum.KeyCode.D then ctrl.r = 0 end
-    wait(17)
+    wait(22)
 end)
