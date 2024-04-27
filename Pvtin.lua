@@ -113,7 +113,7 @@
 					[3] = CFrame.new(12, 12, 12)
 				}
 				game:GetService("ReplicatedStorage").Package.Events.kb:FireServer(unpack(args))
-				if  energy.Value >=29000 then
+				if  energy.Value >=32000 then
 					break
 				end
 			end
