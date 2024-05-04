@@ -1,4 +1,6 @@
-		 local yo = game:GetService('Players').LocalPlayer
+local function loop1()
+    while isLoop1Active do
+ 		 local yo = game:GetService('Players').LocalPlayer
 local folderData = game.ReplicatedStorage.Datas[yo.UserId]
 local afk = game:service'VirtualUser'
 local statsRequeridosFarm = 4000
@@ -615,3 +617,6 @@ task.wait()
 
 
 empezarFarm()
+        wait(1)
+    end
+end
