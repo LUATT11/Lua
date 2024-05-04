@@ -1,3 +1,46 @@
+
+-- Función para crear el interruptor con modelo similar
+local function createSwitchModel(parent, position)
+    local switchButton = Instance.new("TextButton")
+    switchButton.Parent = parent
+    switchButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    switchButton.BorderSizePixel = 0
+    switchButton.Position = position  
+    switchButton.Size = UDim2.new(0, 84, 0, 30)  
+    switchButton.Text = "" -- Eliminar el texto para que solo sea visible el botón
+
+    -- Esquinas redondeadas para el interruptor
+    local switchButtonCorner = Instance.new("UICorner")
+    switchButtonCorner.Parent = switchButton
+    switchButtonCorner.CornerRadius = UDim.new(0.4, 0)
+
+    -- Añadir la bolita que se moverá
+    local switchBall = Instance.new("Frame")
+    switchBall.Parent = switchButton
+    switchBall.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    switchBall.Size = UDim2.new(0, 30, 0, 30)
+    switchBall.Position = UDim2.new(0, 5, 0.5, -15)
+    switchBall.BorderSizePixel = 0
+
+    -- Añadir esquinas redondeadas a la bolita
+    local switchBallCorner = Instance.new("UICorner")
+    switchBallCorner.Parent = switchBall
+    switchBallCorner.CornerRadius = UDim.new(0.5, 0)  
+
+    return switchButton, switchBall
+end
+
+-- Crear los interruptores
+local switchButton1, switchBall1 = createSwitchModel(MenuPanel, UDim2.new(0.1, 75, 0, 69))
+local switchButton2, switchBall2 = createSwitchModel(MenuPanel, UDim2.new(0.6, 75, 0, 69))
+local switchButton3, switchBall3 = createSwitchModel(MenuPanel, UDim2.new(0.285, 0, 0.2,36))
+
+-- Variables para controlar el estado de los bucles
+local isLoop1Active = false
+local isLoop2Active = false
+local isLoop3Active = false
+
+-- Función para controlar el bucle 1
 local function loop1()
     while isLoop1Active do
  		 local yo = game:GetService('Players').LocalPlayer
@@ -620,3 +663,113 @@ empezarFarm()
         wait(1)
     end
 end
+
+-- Función para controlar el bucle 2
+local function loop2()
+    while isLoop2Active do
+        print("Ejecutando bucle 2")
+        wait(1)
+    end
+end
+
+-- Función para controlar el bucle 3
+local function loop3()
+    while isLoop3Active do
+        print("Ejecutando bucle 3")
+        wait(1)
+    end
+end
+
+-- Función para cambiar el estado de los interruptores
+local function toggleSwitch(isActive, switchBall)
+    if isActive then
+        switchBall.Position = UDim2.new(1, -35, 0.5, -15) -- Mover a la derecha cuando esté activo
+        switchBall.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Verde para ON
+    else
+        switchBall.Position = UDim2.new(0, 5, 0.5, -15) -- Mover a la izquierda cuando esté inactivo
+        switchBall.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  -- Rojo para OFF
+    end
+end
+
+-- Función para guardar el estado de los interruptores
+local function SaveSwitchState()
+    local switchInfo = {
+        Switch1 = isLoop1Active,
+        Switch2 = isLoop2Active,
+        Switch3 = isLoop3Active,
+        LastModified = os.time() -- Guarda la hora actual
+    }
+    writefile("SwitchState.json", game:GetService("HttpService"):JSONEncode(switchInfo))
+end
+
+-- Función para cargar el estado de los interruptores
+local function LoadSwitchState()
+    if isfile("SwitchState.json") then
+        local fileContents = readfile("SwitchState.json")
+        if fileContents then
+            local switchData = game:GetService("HttpService"):JSONDecode(fileContents)
+            if switchData then
+                isLoop1Active = switchData.Switch1 or false
+                isLoop2Active = switchData.Switch2 or false
+                isLoop3Active = switchData.Switch3 or false
+
+                -- Aplicar el estado de los interruptores
+                toggleSwitch(isLoop1Active, switchBall1)
+                toggleSwitch(isLoop2Active, switchBall2)
+                toggleSwitch(isLoop3Active, switchBall3)
+
+                -- Ejecutar los bucles si los interruptores están activados
+                if isLoop1Active then
+                    coroutine.wrap(loop1)()
+                end
+                if isLoop2Active then
+                    coroutine.wrap(loop2)()
+                end
+                if isLoop3Active then
+                    coroutine.wrap(loop3)()
+                end
+                return
+            end
+        end
+    end
+    -- Si no se pudo cargar el estado, establecer los valores predeterminados (apagados)
+    isLoop1Active = false
+    isLoop2Active = false
+    isLoop3Active = false
+end
+
+-- Conectar los interruptores
+switchButton1.MouseButton1Click:Connect(function()
+    isLoop1Active = not isLoop1Active
+    toggleSwitch(isLoop1Active, switchBall1)
+    if isLoop1Active then
+        coroutine.wrap(loop1)()
+    end
+    SaveSwitchState()
+end)
+
+switchButton2.MouseButton1Click:Connect(function()
+    isLoop2Active = not isLoop2Active
+    toggleSwitch(isLoop2Active, switchBall2)
+    if isLoop2Active then
+        coroutine.wrap(loop2)()
+    end
+    SaveSwitchState()
+end)
+
+switchButton3.MouseButton1Click:Connect(function()
+    isLoop3Active = not isLoop3Active
+    toggleSwitch(isLoop3Active, switchBall3)
+    if isLoop3Active then
+        coroutine.wrap(loop3)()
+    end
+    SaveSwitchState()
+end)
+
+-- Cargar el estado de los interruptores al iniciar el juego
+LoadSwitchState()
+
+-- Aplicar el estado de los interruptores al cargar
+toggleSwitch(isLoop1Active, switchBall1)
+toggleSwitch(isLoop2Active, switchBall2)
+toggleSwitch(isLoop3Active, switchBall3)
