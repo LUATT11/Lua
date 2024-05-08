@@ -16,7 +16,7 @@ local function checkMission()
         local missionValue = missionData.Quest.Value
         if missionValue ~= "" then
             executeMissionScript()
-            setGravity(6)  -- Si está en una misión, establece la gravedad a 0
+            setGravity(0)  -- Si está en una misión, establece la gravedad a 0
         else
             setGravity(300)  -- Si no está en una misión, restablece la gravedad a 300
         end
