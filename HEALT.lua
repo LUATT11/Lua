@@ -22,5 +22,6 @@ if playerHumanoid then
 
     player.CharacterRemoved:Connect(function()
         connection:Disconnect()
+            wiat(8)
     end)
 end
