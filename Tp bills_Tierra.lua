@@ -34,7 +34,7 @@ local function validacionPlanetas()
     end
 end
 
-function iniciarJuego()
+function kill()
     local data = game.ReplicatedStorage.Datas[yo.UserId]
     game.ReplicatedStorage.Package.Events.Start:InvokeServer()
     wait()
@@ -50,7 +50,7 @@ function iniciarJuego()
     end
 end
 
-function empezarFarm()
+function Tp()
     while true do
         pcall(function()
             if yo.Character and yo.Character:FindFirstChild("Humanoid") and yo.Character.Humanoid.Health > 0 and yo.Character:FindFirstChild("HumanoidRootPart") then
@@ -61,6 +61,6 @@ function empezarFarm()
     end
 end
 
-iniciarJuego()
+kill()
 wait()
-empezarFarm()
+Tp()
